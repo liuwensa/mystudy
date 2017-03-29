@@ -1,15 +1,15 @@
-# `Gulp`优化`JS`、优化`CSS`、优化图片
+#  `Gulp`优化`JS`、优化`CSS`、优化图片
 
 `Gulp.js`是一个自动化构建工具，你可以用它在项目中自动执行常见任务，如：压缩优化JS、压缩CSS、压缩图片等。与`Grunt`相比，`Gulp`编写任务`tasks`更加简单，也更易于阅读和维护，插件高质而简洁。`Gulp.js`基于`Node.js`构建，利用`Node.js`的`Stream`流，使项目可以快速构建并减少 IO 操作。
 
-##1. 安装`Gulp`
+## 1. 安装`Gulp`
 
 `gulp`的任务处理机制是，将来源档案当作输入，通过`Node.js`的`Stream`操作流，并将流导向`gulp`的任务处理插件`plugins`，处理完成后将结果输出到指定输出目录。
 
 从`gulp`的任务处理机制可以看出，`gulp`相当于一个任务管理器，而实际的业务处理是由其插件完成的。因此，`gulp`的安装也包括：安装`gulp`和安装`gulp`任务插件两部分。
 
 
-###1.1 安装`Gulp`
+### 1.1 安装`Gulp`
 
 安装`gulp`，你可以选择全局安装或安装在项目的`dev`开发环境下。
 
@@ -23,7 +23,7 @@
 
 建议对`gulp`使用全局安装，这样可以在所有项目中使用。全局安装对于非`Node.js`项目尤为适用。
 
-###1.2 安装`Gulp`插件
+### 1.2 安装`Gulp`插件
 
 `gulp`插件的安装，也可以使用全局安装或安装在`dev`开发环境。`gulp`插件可以按需安装，如果你只需要处理`CSS`，那么只安装`CSS`相关处理插件即可。`gulp`的所有插件请参考：[Gulp插件](http://gulpjs.com/plugins/)。对于`CSS`文件处理、`JS`文件处理、图片处理，你可能需要以下插件：
 
@@ -48,9 +48,9 @@
 npm install gulp-ruby-sass gulp-autoprefixer gulp-minify-css gulp-jshint gulp-concat gulp-uglify gulp-imagemin gulp-clean gulp-notify gulp-rename gulp-livereload gulp-cache --save-dev
 ```
 
-##2. 使用`Gulp`
+## 2. 使用`Gulp`
 
-###2.1 `gulp`一些常用的`API`
+### 2.1 `gulp`一些常用的`API`
 
 要深入了解`gulp`，建议查看其[官方文档](http://www.gulpjs.com.cn/)。对于一般使用`gulp`，了解下面几个`API`，即可满足日常需求：
 
@@ -64,7 +64,7 @@ npm install gulp-ruby-sass gulp-autoprefixer gulp-minify-css gulp-jshint gulp-co
 - `gulp.dest()`：在指定路径输出文件。只能对其指定路径，而不能对输出文件重命名，重命名可以使用插件`gulp-rename`
 - `gulp.watch()`：监视文件的变化（如：`CSS`、`JS`、图片），当文件发生变化后，我们可以利用它来执行相应的任务
 
-###2.2 gulp使用示例
+### 2.2 gulp使用示例
 
 本示例以一个`Node.js`项目为示范，项目使用`express`Web框架，在`express`中项静态资源是放在`public`目录下的。在全局安装`gulp`及相关插件后，创建`gulpfile.js`文件，文件在项目根目录下, `gulpfile.js`文件内容如下：
 

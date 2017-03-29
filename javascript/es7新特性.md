@@ -1,6 +1,6 @@
-#ES7新特性
+# ES7新特性
 
-##指数操作符
+## 指数操作符
 
 使用**操作符作为中缀来实现指数操作：
 
@@ -17,7 +17,7 @@
     num **= 2;
     console.log(num); // 9
 
-##数组方法includes
+## 数组方法includes
 
     > ['a', 'b', 'c'].includes('a');
     ture
@@ -30,9 +30,9 @@ includes()能否发现NaN
     > [NaN].includes(NaN)
     true
 
-##异步函数`async/await`
+## 异步函数`async/await`
 
-###`async`和`await`在干什么
+### `async`和`await`在干什么
 
 `async`用于申明一个`function`是异步的，而`await`用于等待一个异步方法执行完成。
 
@@ -44,7 +44,7 @@ includes()能否发现NaN
 如果它等到的不是一个`Promise`对象，那`await`表达式的运算结果就是它等到的东西。
 如果它等到的是一个`Promise`对象，`await`就忙起来了，它会阻塞后面的代码，等着`Promise`对象`resolve`，然后得到`resolve`的值，作为await表达式的运算结果。
 
-###`async`函数的用法
+### `async`函数的用法
 `async`函数返回一个`Promise`对象，可以使用`then`方法添加回调函数。当函数执行的时候，一旦遇到`await`就会先返回，等到触发的异步操作完成，再接着执行函数体内后面的语句。
 下面是一个例子。
 
@@ -76,7 +76,7 @@ includes()能否发现NaN
     
 上面代码指定50毫秒以后，输出"hello world"。
 
-###注意点
+### 注意点
 `await`命令后面的`Promise`对象，运行结果可能是`rejected`，所以最好把`await`命令放在`try...catch`代码块中。
 
     async function myFunction() {

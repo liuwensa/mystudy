@@ -1,4 +1,4 @@
-#总结常用Git命令
+# 总结常用Git命令
 
 一般来说，日常使用只要记住下图6个命令。但是熟练使用，恐怕要记住更多命令。
 
@@ -8,7 +8,7 @@
 
 `Workspace`：工作区 `Index / Stage`：暂存区 `Repository`：仓库区（或本地仓库） `Remote`：远程仓库
 
-##新建代码库
+## 新建代码库
 
 在当前目录新建一个Git代码库
 
@@ -22,7 +22,7 @@
 
     $ git clone [url]
 
-##配置
+## 配置
 
 Git的设置文件为`.gitconfig`，它可以在用户主目录下（全局配置），也可以在项目目录下（项目配置）。
 
@@ -38,7 +38,7 @@ Git的设置文件为`.gitconfig`，它可以在用户主目录下（全局配�
 
     gitconfig[–global]user.name“[name]” git config [–global] user.email “[email address]”
 
-##增加/删除文件
+## 增加/删除文件
 
 添加指定文件到暂存区
 
@@ -69,7 +69,7 @@ Git的设置文件为`.gitconfig`，它可以在用户主目录下（全局配�
 
     $ git mv [file-original] [file-renamed]
 
-##代码提交
+## 代码提交
 
 提交暂存区到仓库区
 
@@ -95,7 +95,7 @@ Git的设置文件为`.gitconfig`，它可以在用户主目录下（全局配�
 
     $ git commit –amend [file1] [file2] …
 
-##分支
+## 分支
 
 列出所有本地分支
 
@@ -153,7 +153,7 @@ Git的设置文件为`.gitconfig`，它可以在用户主目录下（全局配�
 
     gitpushorigin–delete[branch?name] git branch -dr [remote/branch]
 
-##标签
+## 标签
 
 列出所有tag
 
@@ -191,7 +191,7 @@ Git的设置文件为`.gitconfig`，它可以在用户主目录下（全局配�
 
     $ git checkout -b [branch] [tag]
 
-##查看信息
+## 查看信息
 
 显示有变更的文件
 
@@ -273,7 +273,7 @@ Git的设置文件为`.gitconfig`，它可以在用户主目录下（全局配�
 
     $ git reflog
 
-##远程同步
+## 远程同步
 
 下载远程仓库的所有变动
 
@@ -307,7 +307,7 @@ Git的设置文件为`.gitconfig`，它可以在用户主目录下（全局配�
 
     $ git push [remote] –all
 
-##撤销
+## 撤销
 
 恢复暂存区的指定文件到工作区
 
@@ -349,7 +349,7 @@ Git的设置文件为`.gitconfig`，它可以在用户主目录下（全局配�
 
     gitstash git stash pop
 
-##其他
+## 其他
 
 生成一个可供发布的压缩包
 

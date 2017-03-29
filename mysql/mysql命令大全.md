@@ -1,6 +1,6 @@
-#mysql命令大全
+# mysql命令大全
 
-##1、连接Mysql
+## 1、连接Mysql
 
 格式： `mysql -u用户名 －p用户密码`
 
@@ -12,27 +12,27 @@
 
 退出MYSQL命令： `exit` （回车）
  
-##2、修改密码
+## 2、修改密码
 
 格式：`mysqladmin -u用户名 -p旧密码 password 新密码`
 
-###1、新加密码
+### 1、新加密码
 
 命令 `mysqladmin -u root password 12345678`
 
 注：因为开始时`root`没有密码，所以`-p旧密码`一项就可以省略了。
 
-###2、修改密码。
+### 2、修改密码。
 
     mysqladmin -u root -p12345678 password 123456
 
-##3、增加新用户
+## 3、增加新用户
 
 注意：和上面不同，下面的因为是`MYSQL`环境中的命令，所以后面都带一个分号作为命令结束符
 
 格式：`grant select on 数据库.* to 用户名@登录主机 identified by “密码”`
 
-###1、增加一个用户`test1`密码为`abc`，让他可以在任何主机上登录，并对所有数据库有查询、插入、修改、删除的权限。
+### 1、增加一个用户`test1`密码为`abc`，让他可以在任何主机上登录，并对所有数据库有查询、插入、修改、删除的权限。
 
 首先用`root`用户连入`MYSQL`，然后键入以下命令：
 
@@ -40,7 +40,7 @@
 
 但增加的用户是十分危险的，你想如某个人知道`test1`的密码，那么他就可以在`internet`上的任何一台电脑上登录你的`mysql`数据库并对你的数据可以为所欲为了，解决办法见2。
 
-###2、增加一个用户`test2`密码为`abc`,让他只可以在`localhost`上登录，并可以对数据库`mydb`进行查询、插入、修改、删除的操作（`localhost`指本地主机，即`MYSQL`数据库所在的那台主机），这样用户即使用知道`test2`的密码，他也无法从`internet上`直接访问数据库，只能通过`MYSQL`主机上的web页来访问了。
+### 2、增加一个用户`test2`密码为`abc`,让他只可以在`localhost`上登录，并可以对数据库`mydb`进行查询、插入、修改、删除的操作（`localhost`指本地主机，即`MYSQL`数据库所在的那台主机），这样用户即使用知道`test2`的密码，他也无法从`internet上`直接访问数据库，只能通过`MYSQL`主机上的web页来访问了。
 
     grant select,insert,update,delete on mydb.* to test2@localhost identified by “abc”;
 
@@ -48,17 +48,17 @@
 
     grant select,insert,update,delete on mydb.* to test2@localhost identified by “”;
  
-##4.1 创建数据库
+## 4.1 创建数据库
 
 注意：创建数据库之前要先连接Mysql服务器
 
 命令：`CREATE DATABASE <数据库名>`
 
-###1：建立一个名为mydb的数据库
+### 1：建立一个名为mydb的数据库
 
 	mysql> CREATE DATABASE mydb;
 
-###2：创建数据库并分配用户
+### 2：创建数据库并分配用户
 
 	CREATE DATABASE 数据库名;
 	GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,ALTER ON 数据库名.* TO 数据库名@localhost IDENTIFIED BY '密码';
@@ -66,7 +66,7 @@
 
 依次执行3个命令完成数据库创建。注意：中文 “密码”和“数据库”是户自己需要设置的。
 
-##4.2 显示数据库
+## 4.2 显示数据库
 
 命令：`show databases （注意：最后有个s）`
 
@@ -74,11 +74,11 @@
 
 注意：为了不再显示的时候乱码，要修改数据库默认编码。以下以GBK编码页面为例进行说明：
 
-###1、修改MYSQL的配置文件：my.ini里面修改`default-character-set=gbk`
+### 1、修改MYSQL的配置文件：my.ini里面修改`default-character-set=gbk`
 
-###2、代码运行时修改（不同的语言有不同的连接修改方式）
+### 2、代码运行时修改（不同的语言有不同的连接修改方式）
 
-##4.3 删除数据库
+## 4.3 删除数据库
 
 命令：`drop database <数据库名>`
 
@@ -86,12 +86,12 @@
 
 	mysql> drop database xhkdb;
 
-###例子1：删除一个已经确定存在的数据库
+### 例子1：删除一个已经确定存在的数据库
 
     mysql> drop database drop_database;
     Query OK, 0 rows affected (0.00 sec)
 
-###例子2：删除一个不确定存在的数据库
+### 例子2：删除一个不确定存在的数据库
 
     mysql> drop database drop_database;
     ERROR 1008 (HY000): Can't drop database 'drop_database'; database doesn't exist
@@ -103,7 +103,7 @@
     mysql> drop database if exists drop_database;//if exists 判断数据库是否存在，不存在也不产生错误
     Query OK, 0 rows affected (0.00 sec)
 
-##4.4 连接数据库
+## 4.4 连接数据库
 
 命令： `use <数据库名>`
     
@@ -130,13 +130,13 @@ USE语句被设立出来，用于与Sybase相兼容。
 
 有些网友问到，连接以后怎么退出。其实，不用退出来，use 数据库后，使用show databases就能查询所有数据库，如果想跳到其他数据库，用use 其他数据库名字就可以了。
 
-##4.5 当前选择的数据库
+## 4.5 当前选择的数据库
 
 命令：`mysql> select database();`
 
 MySQL中SELECT命令类似于其他编程语言里的print或者write，你可以用它来显示一个字符串、数字、数学表达式的结果等等。如何使用MySQL中SELECT命令的特殊功能？
 
-###1.显示MYSQL的版本
+### 1.显示MYSQL的版本
     
     mysql> select version(); 
     +-----------------------+ 
@@ -146,7 +146,7 @@ MySQL中SELECT命令类似于其他编程语言里的print或者write，你可�
     +-----------------------+ 
     1 row in set (0.02 sec) 
 
-###2. 显示当前时间
+### 2. 显示当前时间
 
     mysql> select now(); 
     +---------------------+ 
@@ -156,7 +156,7 @@ MySQL中SELECT命令类似于其他编程语言里的print或者write，你可�
     +---------------------+ 
     1 row in set (0.04 sec) 
 
-###3. 显示年月日
+### 3. 显示年月日
 
     SELECT DAYOFMONTH(CURRENT_DATE); 
     +--------------------------+ 
@@ -182,7 +182,7 @@ MySQL中SELECT命令类似于其他编程语言里的print或者write，你可�
     +--------------------+ 
     1 row in set (0.00 sec) 
 
-###4. 显示字符串
+### 4. 显示字符串
 
     mysql> SELECT "welecome to my blog!"; 
     +----------------------+ 
@@ -192,7 +192,7 @@ MySQL中SELECT命令类似于其他编程语言里的print或者write，你可�
     +----------------------+ 
     1 row in set (0.00 sec) 
 
-###5. 当计算器用
+### 5. 当计算器用
 
     select ((4 * 4) / 10 ) + 25; 
     +----------------------+ 
@@ -202,7 +202,7 @@ MySQL中SELECT命令类似于其他编程语言里的print或者write，你可�
     +----------------------+ 
     1 row in set (0.00 sec) 
 
-###6. 串接字符串
+### 6. 串接字符串
 
     select CONCAT(f_name, " ", l_name) 
     AS Name 
@@ -219,7 +219,7 @@ MySQL中SELECT命令类似于其他编程语言里的print或者write，你可�
 
 注意：这里用到`CONCAT()`函数，用来把字符串串接起来。另外，我们还用到以前学到的AS给结果列`'CONCAT(f_name, " ", l_name)'`起了个假名。
 
-##5.1 创建数据表
+## 5.1 创建数据表
 
 命令：`create table <表名> ( <字段名1> <类型1> [,..<字段名n> <类型n>]);`
 
@@ -234,7 +234,7 @@ MySQL中SELECT命令类似于其他编程语言里的print或者write，你可�
     > id int(4) not null primary key auto_increment,
     > name char(20) not null default '';
 
-##5.3 删除数据表
+## 5.3 删除数据表
 
 命令：`drop table <表名>`
 
@@ -250,7 +250,7 @@ MySQL中SELECT命令类似于其他编程语言里的print或者write，你可�
 
 `RESTRICT和CASCADE`可以使分区更容易。目前，`RESTRICT和CASCADE`不起作用。
 
-##5.4 表插入数据
+## 5.4 表插入数据
 
 命令：`insert into <表名> [( <字段名1>[,..<字段名n > ])] values ( 值1 )[, ( 值n )]`
 
@@ -260,9 +260,9 @@ MySQL中SELECT命令类似于其他编程语言里的print或者write，你可�
 
 注意：`insert into`每次只能向表中插入一条记录。
 
-##5.5 查询表中的数据
+## 5.5 查询表中的数据
 
-###1.查询所有行
+### 1.查询所有行
 
 命令： `select <字段1，字段2，...> from < 表名 > where < 表达式 >`
 
@@ -270,7 +270,7 @@ MySQL中SELECT命令类似于其他编程语言里的print或者write，你可�
 
 	mysql> select * from MyClass;
 
-###2.查询前几行数据
+### 2.查询前几行数据
 
 例如：查看表 MyClass 中前2行数据
 
@@ -278,7 +278,7 @@ MySQL中SELECT命令类似于其他编程语言里的print或者write，你可�
 
 select一般配合where使用，以查询更精确更复杂的数据。
 
-##5.6 删除表中数据
+## 5.6 删除表中数据
  
 命令：`delete from 表名 where 表达式`
 
@@ -286,7 +286,7 @@ select一般配合where使用，以查询更精确更复杂的数据。
 
 	mysql> delete from MyClass where id=1;
 
-##5.7 修改表中数据
+## 5.7 修改表中数据
 
 语法：`update 表名 set 字段=新值,… where 条件`
 	mysql> update MyClass set name='Mary' where id=1;
@@ -301,7 +301,7 @@ select一般配合where使用，以查询更精确更复杂的数据。
 
 UPDATE语法可以用新值更新原有表行中的各列。SET子句指示要修改哪些列和要给予哪些值。WHERE子句指定应更新哪些行。如果没有WHERE子句，则更新所有的行。如果指定了ORDER BY子句，则按照被指定的顺序对行进行更新。LIMIT子句用于给定一个限值，限制可以被更新的行的数目。
  
-##5.8 字段操作
+## 5.8 字段操作
 
 命令：`alter table 表名 add字段 类型 其他;`
 
@@ -345,7 +345,7 @@ UPDATE语法可以用新值更新原有表行中的各列。SET子句指示要�
 
 	MySQL ALTER TABLE table_name DROP field_name;
 
-##5.9 修改表名
+## 5.9 修改表名
 
 命令：`rename table 原表名 to 新表名;`
 
@@ -359,7 +359,7 @@ UPDATE语法可以用新值更新原有表行中的各列。SET子句指示要�
 
 `RENAME TABLE` 在 MySQL 3.23.23 中被加入。
 
-##6、备份数据库
+## 6、备份数据库
 
 命令在DOS的`[url=file://\\mysql\\bin]\\mysql\\bin[/url]`目录下执行
 
@@ -389,7 +389,7 @@ UPDATE语法可以用新值更新原有表行中的各列。SET子句指示要�
 	[root@test1 root]# cd　/home/data/mysql
 	[root@test1 mysql]# mysqldump -u root -p --opt aaa > back_aaa
 
-##7 一个建库和建表
+## 7 一个建库和建表
 
 	drop database if exists school; //如果存在SCHOOL则删除
 	create database school; //建立库SCHOOL
@@ -409,10 +409,10 @@ UPDATE语法可以用新值更新原有表行中的各列。SET子句指示要�
 
 如果你在mysql提示符键入上面的命令也可以，但不方便调试。
 
-###1、你可以将以上命令原样写入一个文本文件中，假设为`school.sql`，然后复制到`c:\\`下，并在DOS状态进入目录`[url=file://\\mysql\\bin]\\mysql\\bin[/url]`，然后键入以下命令：
+### 1、你可以将以上命令原样写入一个文本文件中，假设为`school.sql`，然后复制到`c:\\`下，并在DOS状态进入目录`[url=file://\\mysql\\bin]\\mysql\\bin[/url]`，然后键入以下命令：
 
     mysql -uroot -p密码 < c:\\school.sql
 
 如果成功，空出一行无任何显示；如有错误，会有提示。（以上命令已经调试，你只要将//的注释去掉即可使用）。
 
-###2、或者进入命令行后使用 `mysql> source c:\\school.sql;` 也可以将school.sql文件导入数据库中。
+### 2、或者进入命令行后使用 `mysql> source c:\\school.sql;` 也可以将school.sql文件导入数据库中。
