@@ -1,0 +1,59 @@
+ touch rm rmdir mkdir vim pm2
+#游戏平台1
+113.106.204.5  		
+mysql 	8idk2EDD6E36d3771a82d90f90f8aer0
+port    45222
+root 	fa03771a82d90f8aff09924275a8DB82
+
+#游戏平台2 20t	
+183.60.198.83:3166
+mysql 	3771a82d90f90fdef8344a12a4f902yt
+port    45222
+root    e5v3husx9kruff6pxsdz
+
+
+183.61.86.25   357测试服
+mysql   3771a82d90f90fdef8344a12a4f902yt
+port    3166
+root    habzkj37u3k9dmdqktku
+
+炉石传说
+外 http://192.168.165.113/
+帐号和密码都是 linguifan
+key密码: gfxf12050701
+
+
+node内网测试服：
+192.168.191.94
+port: 45222
+root/su: 7YPrtk7i7LkWMvXK
+mysql root: iwwSotOWBwvrZyl2
+
+
+cd ~/.pm2/logs
+
+chown linguifan.linguifan . -R
+
+rm running -rf; cp 201504151420 running -R; pm2 restart www.357.com
+
+pm2 desc 104
+
+pm2 delete 104 pm2 start app.js --name wj-admin
+
+
+cd /root/.pm2/
+
+cp  wj-admin-out-132.log /home/linguifan/
+
+pm2 start app.js --name combine; pm2 logs combine
+
+fuser -n tcp 9500
+
+ ps -ef| grep 3696   kill
+
+ cd /usr/local/coreseek/
+ls -liah *
+vim csft_mysql.conf 
+vim /etc/crontab 
+/usr/local/coreseek/bin/indexer -c /var/www/357/coreseek/csft_mysql.conf --all --rotate
+/usr/local/coreseek/bin/search '2048' -c /var/www/357/coreseek/csft_mysql.conf

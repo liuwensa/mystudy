@@ -1,0 +1,167 @@
+mysql的源码安装可能很繁琐而且容易出错，
+推荐直接apt-get安装：
+
+apt-get install mysql-server
+
+
+mysql授权总结：
+
+一、Mysql默认关闭远程登录权限，允许root用户在任意地点登录：
+
+1. 进入mysql，GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'mysqlrootpwd' WITH GRANT OPTION; FLUSH privileges;
+
+2.修改/etc/mysql/my.cnf    注释掉bind-address 127.0.0.1 #容易忽略的一步
+
+
+
+二、允许root用户在一个特定的IP进行远程登录，并具有所有库特定操作权限，具体操作如下：
+
+在本机先使用root用户登录mysql：
+
+GRANT select，insert，update，delete ON *.* TO root@"172.16.16.152" IDENTIFIED BY "youpassword";
+
+FLUSH PRIVILEGES;
+
+
+
+三、删除用户授权，需要使用REVOKE命令，具体命令格式为：
+
+REVOKE privileges ON 数据库[.表名] FROM user-name;
+
+GRANT select，insert，update，delete ON TEST-DB TO test-user@"172.16.16.152" IDENTIFIED BY "youpassword";
+
+再进行删除授权操作：
+
+REVOKE all on TEST-DB from test-user;
+
+****注：该操作只是清除了用户对于TEST-DB的相关授权权限，但是这个“test-user”这个用户还是存在。
+
+最后从用户表内清除用户：
+
+DELETE FROM user WHERE user="test-user";
+
+FLUSH PRIVILEGES;
+
+
+
+四、MYSQL权限详细分类：
+
+全局管理权限： 
+
+FILE: 在MySQL服务器上读写文件。 
+
+PROCESS: 显示或杀死属于其它用户的服务线程。 
+
+RELOAD: 重载访问控制表，刷新日志等。 
+
+SHUTDOWN: 关闭MySQL服务。
+
+数据库/数据表/数据列权限： 
+
+ALTER: 修改已存在的数据表(例如增加/删除列)和索引。 
+
+CREATE: 建立新的数据库或数据表。 
+
+DELETE: 删除表的记录。 
+
+DROP: 删除数据表或数据库。 
+
+INDEX: 建立或删除索引。 
+
+INSERT: 增加表的记录。 
+
+SELECT: 显示/搜索表的记录。 
+
+UPDATE: 修改表中已存在的记录。
+
+特别的权限： 
+
+ALL: 允许做任何事(和root一样)。 
+
+USAGE: 只允许登录--其它什么也不允许做。
+
+
+
+
+如果一定要源码安装mysql，可以参考下面我安装成功过的笔记
+实际操作不一定能保证成功。。
+若安装失败要撤销之前的更改也是很麻烦的，请三思后行。
+
+MySQL 5.5安装笔记
+
+参考: 
+http://blog.itpub.net/29733787/viewspace-1222310/
+
+#apt-get update
+#apt-get upgrade
+#apt-get install chkconfig libpcre3-dev build-essential libssl-dev libncurses5-dev bison
+
+
+shell> groupadd mysql
+shell> useradd -r -g mysql mysql     // -r option means mysql is only a system account and can't login as a regular user
+shell> id mysql
+uid=497(mysql) gid=502(mysql) 组=502(mysql)
+
+
+wget http://www.cmake.org/files/v2.8/cmake-2.8.5.tar.gz
+wget ftp://mirror.anl.gov/pub/mysql/Downloads/MySQL-5.5/mysql-5.5.38.tar.gz
+
+apt-get install libncurses5-dev
+rm cmakecache.txt
+
+注意事项：
+如安装失败重新编译时，需要清除旧的对象文件和缓存信息。
+shell> make clean
+shell> rm -f CMakeCache.txt
+shell> rm -rf /etc/my.cnf 
+
+
+shell> mkdir -p /db/mysql                 #安装mysql 
+shell> mkdir -p /db/mysql/data            #存放数据库
+
+
+
+
+###这种淘汰
+
+cmake -DCMAKE_INSTALL_PREFIX=/opt/mysql -DSYSCONFDIR=/opt/mysql/etc -DMYSQL_DATADIR=/data/mysql/data -DMYSQL_TCP_PORT=3306 -DMYSQL_UNIX_ADDR=/tmp/mysqld.sock -DMYSQL_USER=mysql -DEXTRA_CHARSETS=all -DWITH_READLINE=1 -DWITH_SSL=system -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITHOUT_PARTITION_STORAGE_ENGINE=1  
+
+去掉-DWITH_SSL=system  不然报错。。ssl是加密连接
+
+
+#用这种
+
+shell>  unzip mysql-5.6.19.zip
+shell>  cd mysql-5.6.19
+shell>  cmake . -DCMAKE_INSTALL_PREFIX=/db/mysql
+                -DMYSQL_DATADIR=/db/mysql/data
+                -DDEFAULT_CHARSET=utf8 
+                -DDEFAULT_COLLATION=utf8_general_ci
+shell> make && make install
+
+
+shell> chown -R mysql:mysql /db/mysql
+shell> cp /db/mysql/support-files/my-default.cnf /etc/my.cnf   （这是5.6）
+5.5用 
+cp  support-files/my-medium.cnf /etc/my.cnf    
+
+                    
+shell> cp /db/mysql/support-files/mysql.server /etc/rc.d/init.d/mysql        //将mysql的启动服务添加到系统服务中
+shell> /db/mysql/scripts/mysql_install_db --basedir=/db/mysql/ --datadir=/db/mysql/data/ --user=mysql
+
+
+shell>  service mysql start
+Starting MySQL.......                                      [确定]
+shell>  chkconfig --add mysql                                      //加入开机启动服务
+
+
+cmake . -DCMAKE_INSTALL_PREFIX=/raid/db/mysql -DMYSQL_DATADIR=/raid/db/mysql/data -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci
+/raid/db/mysql/scripts/mysql_install_db --basedir=/raid/db/mysql/ --datadir=/raid/db/mysql/data/ --user=mysql
+
+
+如果刚开始密码是空，设置root密码：
+./mysqladmin -u root -p password mypasswd
+
+
+命令行软链接：
+ln -s /raid/db/mysql/bin/mysql /usr/bin/mysql

@@ -1,0 +1,17 @@
+debian下安装node总结 
+
+node的编译需要先安装python
+安装完python编译node时可能出现缺少bz2模块
+所以先安装bz2，然后再安装python。
+
+源码安装zlibzlib-1.2.8.tar.gz
+源码安装python2.7
+
+源码安装node #编译的时间比较长
+
+pm2安装：
+npm install pm2 -g 
+最新版的pm2可能无法安装，可以尝试:
+npm install pm2 -g --unsafe-perm
+
+pm2的使用参考官方文档。

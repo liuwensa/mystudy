@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>发帖测试</title>
+</head>
+<form action="http://127.0.0.1:3000/tieba/createpost" method="POST" enctype="multipart/form-data">
+    <h3 class="title">发帖测试</h3>
+    <table>
+        <tr>
+            <td>
+                <input type="hidden" name="gid" value="2" />
+                <input type="hidden" name="title" value="我就是我的标题" />
+                <textarea name="content"></textarea>
+                <input type="hidden" name="token" value="4502a2ef7700496e8472b3a9fda735d7" />
+                <input type="hidden" name="uid" value="100363" />
+                <input type="hidden" name="tid" value="919" />
+                <input type="hidden" name="atUid" value="[10000, 10001]" />
+                <input type="hidden" name="toCircle" value="1" />
+
+            </td>
+            <td>
+                <input type="submit" ID="btn_Imports"  value="发帖"/>
+            </td>
+        </tr>
+    </table>
+</form>
+
+<form action="http://183.61.86.25:3000/tieba/createpost" method="POST" enctype="multipart/form-data">
+    <h3 class="title">发帖测试</h3>
+    <table>
+        <tr>
+            <td>
+                <input type="file" ID="FileUpload1" name="image1"/>
+                <input type="file" ID="FileUpload2" name="image2"/>
+
+
+                <input type="hidden" name="gid" value="438" />
+                <input type="hidden" name="title" value="我就是我的标题" />
+                <textarea name="content"></textarea>
+                <input type="hidden" name="token" value="7a4129e054d94a79abc499d7c43f183a" />
+                <input type="hidden" name="uid" value="120380" />
+      
+
+            </td>
+            <td>
+                <input type="submit" ID="btn_Imports"  value="发帖"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</html>

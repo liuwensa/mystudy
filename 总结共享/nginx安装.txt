@@ -1,0 +1,255 @@
+debian下安装和配置nginx总结  
+
+nginx源码安装：
+./configure
+make
+make install
+
+默认安装路径： /usr/local/nginx
+日志：/usr/local/nginx/log
+配置：/usr/local/nginx/conf
+
+cd sbin
+./nginx  #运行
+nginx -s stop    #结束
+nginx -s reload  #重启
+
+#安装过程可能遇到的问题
+error: the HTTP rewrite module requires the PCRE library.
+
+#这样或许能解决问题
+apt-get install libpcre3 libpcre3-dev
+
+
+修改系统允许最大文件打开数
+暂时：ulimit -SHn 51201
+永久: cd ~   vi .profile 加入 ulimit -SHn 51201
+
+优化Linux内核TCP参数的内容：
+vi  /etc/sysctl.conf
+##添加内容
+net.ipv4.ip_forward = 0
+net.ipv4.conf.default.rp_filter = 1
+net.ipv4.conf.default.accept_source_route = 0
+kernel.sysrq = 0
+kernel.core_uses_pid = 1
+net.ipv4.tcp_syncookies = 1
+kernel.msgmnb = 65536
+kernel.msgmax = 65536
+kernel.shmmax = 68719476736
+kernel.shmall = 4294967296
+net.ipv4.tcp_max_tw_buckets = 6000
+net.ipv4.tcp_sack = 1
+net.ipv4.tcp_window_scaling = 1
+net.ipv4.tcp_rmem = 4096        87380   4194304
+net.ipv4.tcp_wmem = 4096        16384   4194304
+net.core.wmem_default = 8388608
+net.core.rmem_default = 8388608
+net.core.rmem_max = 16777216
+net.core.wmem_max = 16777216
+net.core.netdev_max_backlog = 262144
+net.core.somaxconn = 262144
+net.ipv4.tcp_max_orphans = 3276800
+net.ipv4.tcp_max_syn_backlog = 262144
+net.ipv4.tcp_timestamps = 0
+net.ipv4.tcp_synack_retries = 1
+net.ipv4.tcp_syn_retries = 1
+net.ipv4.tcp_tw_recycle = 1
+net.ipv4.tcp_tw_reuse = 1
+net.ipv4.tcp_mem = 94500000 915000000 927000000
+net.ipv4.tcp_fin_timeout = 1
+net.ipv4.tcp_keepalive_time = 30
+net.ipv4.ip_local_port_range = 1024    65000
+#添加内容结束
+
+
+使以上内容正式生效：/sbin/sysctl -p
+
+
+
+
+#以下是nginx.conf配置示例
+
+#user  nobody;
+worker_processes  3; #进程数
+#worker_cpu_affinity 00000001 00000010 00000100 00001000 00010000 00100000 01000000 10000000;
+#worker_cpu_affinity 0001 0010 0100 1000;
+worker_cpu_affinity 001 010 100; #绑定CPU
+worker_rlimit_nofile 51201; #最大打开数
+
+error_log  logs/error.log;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;
+
+pid        logs/nginx.pid;
+
+events {
+    use epoll;
+    worker_connections  51201;
+}
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    client_max_body_size    10m;
+    server_names_hash_bucket_size 128;
+    client_header_buffer_size 2k;
+    large_client_header_buffers 4 4k;
+    charset     utf-8;
+
+    fastcgi_send_timeout 300;
+    fastcgi_read_timeout 300;
+    fastcgi_buffer_size 16k;
+    fastcgi_buffers 16 16k;
+    fastcgi_busy_buffers_size 16k;
+    fastcgi_temp_file_write_size 16k;
+    fastcgi_cache_valid 200 302 1h;
+    fastcgi_cache_valid 301 1d;
+    fastcgi_cache_valid any 1m;
+    fastcgi_cache_min_uses 1;
+    fastcgi_cache_use_stale error timeout invalid_header http_500;
+  
+    open_file_cache max=51201 inactive=20s;
+    open_file_cache_min_uses 1;
+    open_file_cache_valid 30s;
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  logs/access.log  main;
+
+    sendfile        on;
+    tcp_nopush     on;
+
+    keepalive_timeout  60;
+
+    tcp_nodelay on;
+  
+    gzip on;
+    gzip_min_length  1k;
+    gzip_buffers     4 16k;
+    gzip_http_version 1.0;
+    gzip_comp_level 2;
+    gzip_types       text/plain application/x-javascript text/css application/xml;
+    gzip_vary on;
+    
+    upstream node_server_pool {  # 负载均衡
+    server 127.0.0.1:1337 ;
+    server 127.0.0.1:1338 ; 
+    server 127.0.0.1:1339 ; 
+    server 127.0.0.1:1340 ;
+    server 127.0.0.1:1341 ; } 
+	
+	server {
+        listen 8421;
+        server_name    127.0.0.1;
+        access_log    logs/ab.log  main;
+        location / {
+        
+            fastcgi_connect_timeout	   75;
+            client_body_buffer_size 1024k;
+            proxy_send_timeout 3600;
+            proxy_read_timeout 3600;
+            proxy_connect_timeout 75;
+            proxy_buffers 32 128k;
+            proxy_buffer_size 64k;
+            proxy_busy_buffers_size 128k;
+            
+            proxy_set_header    X-Real-IP            $remote_addr;
+            proxy_set_header    X-Forwarded-For      $proxy_add_x_forwarded_for;
+            proxy_set_header    Host                 $http_host;
+            proxy_set_header    X-NginX-Proxy        true;
+            proxy_set_header    Connection           "";
+            proxy_http_version  1.1;
+            proxy_pass          http://127.0.0.1:8687/;
+        }
+    }
+
+    server {
+        listen       80;
+        server_name  localhost;
+
+        #charset koi8-r;
+
+        #access_log  logs/host.access.log  main;
+
+        location / {
+            root   html;
+            index  index.html index.htm;
+        }
+
+        #error_page  404              /404.html;
+
+        # redirect server error pages to the static page /50x.html
+        #
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+
+        # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+        #
+        #location ~ \.php$ {
+        #    proxy_pass   http://127.0.0.1;
+        #}
+
+        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+        #
+        #location ~ \.php$ {
+        #    root           html;
+        #    fastcgi_pass   127.0.0.1:9000;
+        #    fastcgi_index  index.php;
+        #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+        #    include        fastcgi_params;
+        #}
+
+        # deny access to .htaccess files, if Apache's document root
+        # concurs with nginx's one
+        #
+        #location ~ /\.ht {
+        #    deny  all;
+        #}
+    }
+
+    
+    
+
+    # another virtual host using mix of IP-, name-, and port-based configuration
+    #
+    #server {
+    #    listen       8000;
+    #    listen       somename:8080;
+    #    server_name  somename  alias  another.alias;
+
+    #    location / {
+    #        root   html;
+    #        index  index.html index.htm;
+    #    }
+    #}
+
+
+    
+    
+    # HTTPS server
+    #
+    #server {
+    #    listen       443 ssl;
+    #    server_name  localhost;
+
+    #    ssl_certificate      cert.pem;
+    #    ssl_certificate_key  cert.key;
+
+    #    ssl_session_cache    shared:SSL:1m;
+    #    ssl_session_timeout  5m;
+
+    #    ssl_ciphers  HIGH:!aNULL:!MD5;
+    #    ssl_prefer_server_ciphers  on;
+
+    #    location / {
+    #        root   html;
+    #        index  index.html index.htm;
+    #    }
+    #}
+
+}
