@@ -363,31 +363,34 @@ UPDATE语法可以用新值更新原有表行中的各列。SET子句指示要�
 
 命令在DOS的`[url=file://\\mysql\\bin]\\mysql\\bin[/url]`目录下执行
 
-1.导出整个数据库
+1. 导出整个数据库
 导出文件默认是存在mysql\bin目录下
 
     mysqldump -u 用户名 -p 数据库名 > 导出的文件名
     mysqldump -u user_name -p123456 database_name > outfile_name.sql
 
-2.导出一个表
+2. 导出一个表
 
     mysqldump -u 用户名 -p 数据库名 表名> 导出的文件名
     mysqldump -u user_name -p database_name table_name > outfile_name.sql
 
-3.导出一个数据库结构
+3. 导出一个数据库结构
 
     mysqldump -u user_name -p -d –add-drop-table database_name > outfile_name.sql
 
-`-d `没有数据` –add-drop-table` 在每个`create`语句之前增加一个`drop table`
+   `-d `没有数据` –add-drop-table` 在每个`create`语句之前增加一个`drop table`
 
-4.带语言参数导出
+4. 带语言参数导出
 
     mysqldump -uroot -p –default-character-set=latin1 –set-charset=gbk –skip-opt database_name > outfile_name.sql
 
-例如，将aaa库备份到文件back_aaa中：
+    例如，将aaa库备份到文件back_aaa中：
 
-	[root@test1 root]# cd　/home/data/mysql
-	[root@test1 mysql]# mysqldump -u root -p --opt aaa > back_aaa
+	cd　/home/data/mysql
+	mysqldump -u root -p --opt aaa > back_aaa
+
+5. 恢复
+	`mysql -u root -p ccc < back_aaa`
 
 ## 7 一个建库和建表
 
@@ -416,3 +419,4 @@ UPDATE语法可以用新值更新原有表行中的各列。SET子句指示要�
 如果成功，空出一行无任何显示；如有错误，会有提示。（以上命令已经调试，你只要将//的注释去掉即可使用）。
 
 ### 2、或者进入命令行后使用 `mysql> source c:\\school.sql;` 也可以将school.sql文件导入数据库中。
+
