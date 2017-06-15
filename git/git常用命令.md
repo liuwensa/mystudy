@@ -295,6 +295,11 @@ Git的设置文件为`.gitconfig`，它可以在用户主目录下（全局配�
 
     $ git pull [remote] [branch]
 
+`git pull`并强制覆盖本地修改操作
+
+1. 清除本地修改`git reset --hard`
+2. 拉代码`git pull`
+
 上传本地指定分支到远程仓库
 
     $ git push [remote] [branch]
