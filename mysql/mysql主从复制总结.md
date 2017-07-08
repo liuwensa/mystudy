@@ -49,7 +49,7 @@ unlock tables;
 
 ```
 
-    grant REPLICATION SLAVE on *.* to slaveBelongsToMaster(用户名)@'%' identified by "123456(用户密码)"; 
+    grant REPLICATION SLAVE on *.* to user1(用户名)@'%' identified by "123456(用户密码)"; （需要注意密码的长度，有时候过长会被截断，提示1045）
     flush privileges;
 ```
 一般不用root帐号，“%”表示所有客户端都可能连，只要帐号，密码正确，此处可用具体客户端IP代替，如127.0.0.1，加强安全。
@@ -63,17 +63,17 @@ source /home/sync.sql
 
 配置使用同步账号：
 ```
-CHANGE MASTER TO MASTER_HOST='127.x.x.x(主库IP)',MASTER_PORT=3306(主库端口),MASTER_USER='slaveBelongsToMaster',MASTER_PASSWORD='123456',MASTER_LOG_FILE='mysql-bin.000003(上面得到的二进制日志名)',MASTER_LOG_POS=106(上面得到的二进制偏移量);
+CHANGE MASTER TO MASTER_HOST='127.x.x.x(主库IP)',MASTER_PORT=3306(主库端口),MASTER_USER='user1'(主机账号),MASTER_PASSWORD='123456',MASTER_LOG_FILE='mysql-bin.000003(上面得到的二进制日志名)',MASTER_LOG_POS=106(上面得到的二进制偏移量);
 ```
 
 开始主从复制：
 ```
-slave start; 或 start slave;
+ start slave;
 ```
 
 终止主从复制：
 ```
-slave stop; 或 stop slave;
+ stop slave;
 ```
 
 从服务器状态
